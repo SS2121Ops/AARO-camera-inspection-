@@ -1,0 +1,6 @@
+{
+  "name": "የአዲስ አበባ ገቢዎች ቢሮ በካሜራ የታገዘ የመስክ ቁጥጥር ስምሪት አፈጻጸም ሪፖርት",
+  "description": "የአዲስ አበባ ገቢዎች ቢሮ በካሜራ የታገዘ የመስክ ቁጥጥር ስምሪት አፈጻጸም ሪፖርት ዳሽቦርድ — መርካቶ ቁጥር 1፣ መርካቶ ቁጥር 2 ጨምሮ የሁሉም ክፍለ ከተሞች እና ወረዳዎች የካሜራ አጠቃቀም፣ ግኝቶች እና የልዩ ስምሪት ክትትል",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
