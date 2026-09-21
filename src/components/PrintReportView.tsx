@@ -128,12 +128,12 @@ export const PrintReportView: React.FC<PrintReportViewProps> = ({
         {/* Official Letterhead Header */}
         <div className="border-b-2 border-slate-900 pb-4 mb-4">
           <div className="flex items-center justify-between gap-4">
-            {/* Left Official Logo */}
+            {/* Header Logo: Official Body Camera Logo */}
             <div className="shrink-0">
               <img
-                src="/revenues_bureau_logo.jpg"
-                alt="የአዲስ አበባ ከተማ አስተዳደር ገቢዎች ቢሮ አርማ"
-                className="w-18 h-18 sm:w-20 sm:h-20 object-contain rounded-full border border-slate-300 p-0.5 bg-white shadow-xs"
+                src="/body_camera_logo.jpg"
+                alt="የመስክ ቁጥጥር ካሜራ አርማ"
+                className="w-18 h-18 sm:w-20 sm:h-20 object-cover rounded-xl border border-slate-300 p-0.5 bg-slate-950 shadow-xs"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -151,14 +151,13 @@ export const PrintReportView: React.FC<PrintReportViewProps> = ({
               </h2>
             </div>
 
-            {/* Right Body Camera Device Logo */}
-            <div className="shrink-0">
-              <img
-                src="/body_camera_logo.jpg"
-                alt="የመስክ ቁጥጥር ካሜራ አርማ"
-                className="w-18 h-18 sm:w-20 sm:h-20 object-cover rounded-xl border border-slate-300 p-0.5 bg-slate-950 shadow-xs"
-                referrerPolicy="no-referrer"
-              />
+            {/* Right Official Seal / Reference Tag */}
+            <div className="shrink-0 text-right hidden sm:block">
+              <div className="border border-slate-400 p-2 rounded text-center bg-slate-50 min-w-[120px]">
+                <div className="text-[10px] font-bold text-slate-700 uppercase">ይፋዊ ሰነድ</div>
+                <div className="text-[9px] text-slate-500 font-medium">የመስክ ካሜራ ስምሪት</div>
+                <div className="text-[10px] font-mono font-bold text-slate-900 mt-0.5">{header.dateEth}</div>
+              </div>
             </div>
           </div>
           
@@ -224,7 +223,14 @@ export const PrintReportView: React.FC<PrintReportViewProps> = ({
               {cameraUsage.map((r, idx) => (
                 <tr key={r.id} className="border-b border-slate-300">
                   <td className="p-1 text-center border border-slate-300">{idx + 1}</td>
-                  <td className="p-1 font-semibold border border-slate-300">{r.inspectorName || '—'}</td>
+                  <td className="p-1 font-semibold border border-slate-300">
+                    <div>{r.inspectorName || '—'}</div>
+                    {(r.inspectorName2 || r.inspectorName3) && (
+                      <div className="text-[8.5px] text-slate-600 font-normal mt-0.5">
+                        {[r.inspectorName2, r.inspectorName3].filter(Boolean).join('፣ ')}
+                      </div>
+                    )}
+                  </td>
                   <td className="p-1 border border-slate-300">{r.badgeNumber || '—'}</td>
                   <td className="p-1 border border-slate-300">{r.assignedWoreda || '—'}</td>
                   <td className="p-1 border border-slate-300">{r.specificLocation || '—'}</td>

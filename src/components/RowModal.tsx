@@ -35,6 +35,8 @@ export const RowModal: React.FC<RowModalProps> = ({
   // Form 1 State
   const [camUsage, setCamUsage] = useState<Partial<CameraUsageRecord>>({
     inspectorName: '',
+    inspectorName2: '',
+    inspectorName3: '',
     badgeNumber: '',
     assignedWoreda: availableWoredas[0] || 'ወረዳ 01',
     specificLocation: '',
@@ -182,16 +184,59 @@ export const RowModal: React.FC<RowModalProps> = ({
           {activeMode === 'camera_usage' && (
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">የተቆጣጣሪው ስም</label>
-                  <input
-                    type="text"
-                    required
-                    value={camUsage.inspectorName}
-                    onChange={(e) => setCamUsage({ ...camUsage, inspectorName: e.target.value })}
-                    placeholder="አበበ ተፈራ እና ስለሺ ከበደ"
-                    className="w-full border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 focus:outline-none focus:ring-1 focus:ring-amber-500"
-                  />
+                <div className="sm:col-span-2 bg-slate-50/70 p-3 rounded-lg border border-slate-200/80 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <label className="block font-bold text-slate-800">
+                      የተቆጣጣሪዎች ስም ዝርዝር (እስከ 3 ተቆጣጣሪዎች)
+                    </label>
+                    <span className="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                      የቡድን ስምሪት
+                    </span>
+                  </div>
+
+                  {/* 1st Inspector (Required) */}
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-600 mb-0.5">
+                      1. የተቆጣጣሪው ስም (ዋና) <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={camUsage.inspectorName}
+                      onChange={(e) => setCamUsage({ ...camUsage, inspectorName: e.target.value })}
+                      placeholder="ለምሳሌ፡ አበበ ተፈራ"
+                      className="w-full border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 bg-white focus:outline-none focus:ring-1 focus:ring-amber-500 font-medium"
+                    />
+                  </div>
+
+                  {/* Additional 2 Inspector inputs requested by user */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-600 mb-0.5">
+                        2. ተጨማሪ ተቆጣጣሪ ስም (አማራጭ)
+                      </label>
+                      <input
+                        type="text"
+                        value={camUsage.inspectorName2 || ''}
+                        onChange={(e) => setCamUsage({ ...camUsage, inspectorName2: e.target.value })}
+                        placeholder="ለምሳሌ፡ ስለሺ ከበደ"
+                        className="w-full border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 bg-white focus:outline-none focus:ring-1 focus:ring-amber-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-600 mb-0.5">
+                        3. ተጨማሪ ተቆጣጣሪ ስም (አማራጭ)
+                      </label>
+                      <input
+                        type="text"
+                        value={camUsage.inspectorName3 || ''}
+                        onChange={(e) => setCamUsage({ ...camUsage, inspectorName3: e.target.value })}
+                        placeholder="ለምሳሌ፡ አልማዝ ታደሰ"
+                        className="w-full border border-slate-300 rounded px-2.5 py-1.5 text-slate-800 bg-white focus:outline-none focus:ring-1 focus:ring-amber-500"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div>

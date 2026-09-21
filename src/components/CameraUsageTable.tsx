@@ -212,7 +212,13 @@ export const CameraUsageTable: React.FC<CameraUsageTableProps> = ({
                     {index + 1}
                   </td>
                   <td className="py-2 px-3 font-semibold text-slate-800 border-r border-slate-100">
-                    {r.inspectorName || '—'}
+                    <div>{r.inspectorName || '—'}</div>
+                    {(r.inspectorName2 || r.inspectorName3) && (
+                      <div className="text-[11px] text-slate-500 font-normal mt-0.5 space-y-0.5">
+                        {r.inspectorName2 && <div className="text-slate-600">2. {r.inspectorName2}</div>}
+                        {r.inspectorName3 && <div className="text-slate-600">3. {r.inspectorName3}</div>}
+                      </div>
+                    )}
                   </td>
                   <td className="py-2 px-2 text-slate-600 font-mono text-[11px] border-r border-slate-100">
                     {r.badgeNumber || '—'}

@@ -23,24 +23,22 @@ export const HeaderInfoCard: React.FC<HeaderInfoCardProps> = ({ header, onUpdate
 
   return (
     <div className="bg-white rounded-xl border border-slate-200/80 shadow-sm p-4 sm:p-5 mb-6 transition-all">
-      {/* Official Header with Dual Left and Right Logos */}
+      {/* Official Header with Body Camera Logo */}
       <div className="flex flex-col sm:flex-row items-center justify-between border-b border-slate-100 pb-4 mb-4 gap-4">
-        {/* Left: Official Revenues Bureau Logo */}
+        {/* Left: Official Body Camera Logo */}
         <div className="flex items-center gap-3.5 self-start sm:self-center">
           <div className="relative group">
             <img
-              src="/revenues_bureau_logo.jpg"
-              alt="የአዲስ አበባ ከተማ አስተዳደር ገቢዎች ቢሮ አርማ Logo"
-              className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-full shadow-md border-2 border-amber-400 bg-white p-0.5 shrink-0 transition-transform group-hover:scale-105"
+              src="/body_camera_logo.jpg"
+              alt="የመስክ ቁጥጥር ካሜራ አርማ Logo"
+              className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-2xl shadow-md border-2 border-amber-400 bg-slate-950 p-0.5 shrink-0 transition-transform group-hover:scale-105"
               referrerPolicy="no-referrer"
             />
-            <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-[10px] text-white font-bold" title="ይፋዊ አርማ">
-              ✓
-            </span>
+            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white animate-pulse" title="ካሜራ ነቅቷል (Active)" />
           </div>
           <div className="hidden xs:block sm:hidden md:block">
             <span className="text-[11px] font-bold tracking-wider uppercase text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
-              ይፋዊ አርማ
+              የመስክ ካሜራ ስምሪት
             </span>
           </div>
         </div>
@@ -84,23 +82,8 @@ export const HeaderInfoCard: React.FC<HeaderInfoCardProps> = ({ header, onUpdate
           </div>
         </div>
 
-        {/* Right: Inspection Body-Worn Camera Logo & Quick Actions */}
+        {/* Right: Quick Actions */}
         <div className="flex items-center gap-3 self-end sm:self-center shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="hidden lg:flex flex-col items-end text-right">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">የመስክ ካሜራ ስምሪት</span>
-              <span className="text-xs font-bold text-slate-800">Body Camera Unit</span>
-            </div>
-            <div className="relative group">
-              <img
-                src="/body_camera_logo.jpg"
-                alt="የመስክ ቁጥጥር ካሜራ አርማ Logo"
-                className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-2xl shadow-md border-2 border-slate-700 bg-slate-950 p-0.5 shrink-0 transition-transform group-hover:scale-105"
-                referrerPolicy="no-referrer"
-              />
-              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-rose-500 border-2 border-white animate-pulse" title="ካሜራ ነቅቷል (Active)" />
-            </div>
-          </div>
 
           {onOpenTelegram && !isEditing && (
             <button

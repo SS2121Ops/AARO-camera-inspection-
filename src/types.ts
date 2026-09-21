@@ -18,7 +18,9 @@ export interface ReportHeader {
 export interface CameraUsageRecord {
   id: string;
   orderNumber: number; // ተ.ቁ
-  inspectorName: string; // የተቆጣጣሪው ስም
+  inspectorName: string; // የተቆጣጣሪው ስም (ተቆጣጣሪ 1)
+  inspectorName2?: string; // ተጨማሪ ተቆጣጣሪ 2
+  inspectorName3?: string; // ተጨማሪ ተቆጣጣሪ 3
   badgeNumber: string; // መለያ ቁጥር
   assignedWoreda: string; // የተመደቡበት ወረዳ (ወረዳ 01, ወረዳ 02...)
   specificLocation: string; // ልዩ ቦታ

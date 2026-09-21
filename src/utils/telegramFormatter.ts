@@ -93,7 +93,8 @@ export function generateTelegramReportText(
     if (options.includeInspectorList) {
       lines.push(`\n📋 የተቆጣጣሪዎችና ካሜራዎች ዝርዝር:`);
       cameraUsage.slice(0, 15).forEach((c, i) => {
-        lines.push(`  ${i + 1}. ${c.inspectorName} (${c.assignedWoreda || 'ወረዳ'}) | ካሜራ: ${c.cameraId} | ሰዓት: ${c.startTime}-${c.endTime}`);
+        const names = [c.inspectorName, c.inspectorName2, c.inspectorName3].filter(Boolean).join(', ');
+        lines.push(`  ${i + 1}. ${names} (${c.assignedWoreda || 'ወረዳ'}) | ካሜራ: ${c.cameraId} | ሰዓት: ${c.startTime}-${c.endTime}`);
       });
       if (cameraUsage.length > 15) {
         lines.push(`  ... እና ተጨማሪ ${cameraUsage.length - 15} ተቆጣጣሪዎች`);

@@ -50,9 +50,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
             <div className="flex items-center gap-2.5">
               <img
-                src="/revenues_bureau_logo.jpg"
-                alt="የአዲስ አበባ ከተማ አስተዳደር ገቢዎች ቢሮ Logo"
-                className="w-10 h-10 rounded-full object-contain bg-white border-2 border-amber-400 shadow-md shrink-0 p-0.5"
+                src="/body_camera_logo.jpg"
+                alt="የመስክ ካሜራ አርማ Logo"
+                className="w-10 h-10 rounded-xl object-cover bg-slate-950 border-2 border-amber-400 shadow-md shrink-0 p-0.5"
                 referrerPolicy="no-referrer"
               />
               <div>
@@ -71,20 +71,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                     ({header.subCity} ክፍለ ከተማ)
                   </span>
                 </h1>
-              </div>
-            </div>
-
-            {/* Right Body Camera device indicator */}
-            <div className="hidden 2xl:flex items-center gap-2 pl-2 border-l border-slate-800">
-              <img
-                src="/body_camera_logo.jpg"
-                alt="የመስክ ካሜራ Logo"
-                className="w-9 h-9 rounded-lg object-cover bg-slate-950 border border-slate-700 shadow-sm shrink-0"
-                referrerPolicy="no-referrer"
-              />
-              <div className="text-left">
-                <div className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">የመስክ ካሜራ ስምሪት</div>
-                <div className="text-[11px] text-slate-300 font-semibold">Body-Worn Camera</div>
               </div>
             </div>
 
