@@ -3,7 +3,7 @@
  * Camera Usage and Special Deployment Inspection Report & Dashboard
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   initialHeader,
   initialCameraUsageRecords,
@@ -26,11 +26,14 @@ import { VisualAnalytics } from './components/VisualAnalytics';
 import { CameraUsageTable } from './components/CameraUsageTable';
 import { CameraFindingsTable } from './components/CameraFindingsTable';
 import { SpecialDeploymentTable } from './components/SpecialDeploymentTable';
+import { AlertsView } from './components/AlertsView';
 import { RowModal, ModalMode } from './components/RowModal';
 import { PrintReportView } from './components/PrintReportView';
 import { TelegramShareModal } from './components/TelegramShareModal';
 import { exportReportToCSV } from './utils/exportCsv';
-import { CheckCircle2, Info, FileSpreadsheet, ShieldCheck, Sparkles, Send } from 'lucide-react';
+import { analyzeFindingAlert } from './utils/alertDetector';
+import { launchTelegram } from './utils/telegramLauncher';
+import { CheckCircle2, Info, FileSpreadsheet, ShieldCheck, Sparkles, Send, ShieldAlert, ArrowRight } from 'lucide-react';
 
 const STORAGE_KEY_HEADER = 'eth_tax_report_header_v3';
 const STORAGE_KEY_CAM_USAGE = 'eth_tax_report_cam_usage_v3';
@@ -92,6 +95,11 @@ export default function App() {
 
   // Telegram Share Modal state
   const [isTelegramModalOpen, setIsTelegramModalOpen] = useState(false);
+
+  // High-Priority Alerts Count for Navbar and Supervisors
+  const alertsCount = useMemo(() => {
+    return cameraFindings.filter(f => analyzeFindingAlert(f) !== null).length;
+  }, [cameraFindings]);
 
   // Sync to localStorage
   useEffect(() => {
@@ -270,6 +278,7 @@ export default function App() {
         onClearData={() => setIsClearModalOpen(true)}
         onAddNewModal={(mode) => handleOpenAddModal(mode || (activeTab === 'camera_findings' ? 'camera_findings' : activeTab === 'special_deployment' ? 'special_deployment' : 'camera_usage'))}
         onOpenTelegram={() => setIsTelegramModalOpen(true)}
+        alertsCount={alertsCount}
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
@@ -336,7 +345,56 @@ export default function App() {
           specialDeployments={specialDeployments}
         />
 
+        {/* High-Priority Alerts Quick Action Banner for Supervisors */}
+        {alertsCount > 0 && activeTab === 'all' && (
+          <div className="mb-6 bg-gradient-to-r from-rose-900 via-rose-950 to-slate-900 text-white rounded-xl p-4 shadow-md border border-rose-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-rose-600/70 text-white border border-rose-400/40">
+                <ShieldAlert className="w-5 h-5 text-rose-200 animate-pulse" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-white text-sm sm:text-base">
+                    🚨 አስቸኳይ ክትትል የሚሹ {alertsCount} የካሜራ ግኝት ማስጠንቀቂያዎች ተገኝተዋል!
+                  </span>
+                  <span className="text-[10px] uppercase font-black bg-rose-600 text-white px-2 py-0.5 rounded-full animate-pulse">
+                    Action Needed
+                  </span>
+                </div>
+                <p className="text-xs text-rose-200/90 mt-0.5">
+                  በግኝቶች ዝርዝር ውስጥ ከፍተኛ ቅድሚያ የተሰጣቸው የስርቆት፣ የዲሲፕሊን ክስ፣ የሌንስ መሸፈን ወይም የጥሰት ቁልፍ ቃላት በራስ-ሰር ተለይተዋል።
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('alerts')}
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-black bg-rose-500 hover:bg-rose-400 text-white shadow-sm transition-all whitespace-nowrap self-start sm:self-auto cursor-pointer"
+            >
+              <span>ወደ ማስጠንቀቂያዎች ሂድ (Go to Alerts)</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
         {/* View Switch / Content Sections */}
+        {activeTab === 'alerts' && (
+          <AlertsView
+            records={cameraFindings}
+            onEditRecord={(record) => handleOpenEditModal('camera_findings', record)}
+            onDeleteRecord={handleDeleteFinding}
+            onOpenTelegramAlert={async (finding, match, note) => {
+              const msg = `🚨 አስቸኳይ የመስክ ካሜራ ግኝት ማስጠንቀቂያ!\n📍 ክፍለ ከተማ: ${finding.subCity}\n⚠️ ደረጃ: ${match.severity === 'critical' ? 'ከፍተኛ ቅድሚያ (Critical)' : 'መካከለኛ ማስጠንቀቂያ (Warning)'}\n🔍 የተገኙ ቁልፍ ቃላት: ${match.matchedKeywords.join(', ')}\n📋 የግኝት መግለጫ: ${finding.description || '—'}\n${note ? `📝 የሱፐርቫይዘር መመሪያ: ${note}\n` : ''}📅 ቀን: ${header.dateEth}\n\n🏛️ የአዲስ አበባ ከተማ አስተዳደር ገቢዎች ቢሮ`;
+              await launchTelegram({
+                text: msg,
+                mode: 'app',
+                autoCopy: true
+              });
+            }}
+          />
+        )}
+
         {activeTab === 'analytics' && (
           <VisualAnalytics
             cameraFindings={cameraFindings}
@@ -369,6 +427,7 @@ export default function App() {
             onEditRecord={(record) => handleOpenEditModal('camera_findings', record)}
             onDeleteRecord={handleDeleteFinding}
             onClearTable={handleClearCameraFindings}
+            onNavigateToAlerts={() => setActiveTab('alerts')}
           />
         )}
 

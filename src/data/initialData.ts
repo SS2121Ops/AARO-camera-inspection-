@@ -103,6 +103,23 @@ export const initialCameraFindingRecords: CameraFindingRecord[] = [
     writtenWarning: 0,
     finalWarning: 0,
     disciplinaryCharge: 0
+  },
+  {
+    id: 'finding-row-3',
+    orderNumber: 3,
+    subCity: 'አዲስ ከተማ',
+    totalFindingsCount: 3,
+    outOfCameraView: 1,
+    batteryClosedEarly: 0,
+    earlyReturn: 0,
+    lensCovered: 0,
+    theftOrRelated: 1,
+    skippedShopInspection: 1,
+    description: 'የስርቆት እና የማጭበርበር ጥሰት ጥርጣሬ የተገኘበት ሲሆን ጉዳዩ በዲሲፕሊን ክስ እየተጣራ ይገኛል',
+    verbalWarning: 0,
+    writtenWarning: 0,
+    finalWarning: 0,
+    disciplinaryCharge: 1
   }
 ];
 

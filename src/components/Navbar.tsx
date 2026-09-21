@@ -15,6 +15,7 @@ interface NavbarProps {
   onClearData: () => void;
   onAddNewModal: (mode?: ModalMode) => void;
   onOpenTelegram?: () => void;
+  alertsCount?: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -27,7 +28,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onReset,
   onClearData,
   onAddNewModal,
-  onOpenTelegram
+  onOpenTelegram,
+  alertsCount = 0
 }) => {
   const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
   const addMenuRef = useRef<HTMLDivElement>(null);
@@ -305,6 +307,28 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             የስታቲስቲክስ ገበታዎች (Charts)
+          </button>
+
+          {/* 🚨 Alerts Tab with Live Badge */}
+          <button
+            type="button"
+            onClick={() => onSelectTab('alerts')}
+            className={`px-3 py-1.5 rounded-md whitespace-nowrap transition-all flex items-center gap-1.5 font-bold ${
+              activeTab === 'alerts'
+                ? 'bg-rose-600 text-white border border-rose-500 shadow-sm'
+                : 'text-rose-300 hover:text-white hover:bg-rose-950/60 border border-rose-800/60'
+            }`}
+            title="አስቸኳይ ጣልቃ-ገብነት የሚሹ የካሜራ ግኝቶች"
+          >
+            <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+            <span>ማስጠንቀቂያዎች (Alerts)</span>
+            {alertsCount > 0 && (
+              <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${
+                activeTab === 'alerts' ? 'bg-white text-rose-950' : 'bg-rose-500 text-white animate-pulse'
+              }`}>
+                {alertsCount}
+              </span>
+            )}
           </button>
         </div>
       </div>

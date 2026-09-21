@@ -81,4 +81,12 @@ export interface SpecialDeploymentRecord {
   inspectorNames: string; // የተቆጣጣሪ ሰራተኞች ስም
 }
 
-export type ActiveTab = 'all' | 'camera_usage' | 'camera_findings' | 'special_deployment' | 'analytics';
+export type ActiveTab = 'all' | 'camera_usage' | 'camera_findings' | 'special_deployment' | 'analytics' | 'alerts';
+
+export interface SupervisorIntervention {
+  findingId: string;
+  status: 'pending' | 'in_progress' | 'action_taken' | 'escalated';
+  supervisorNote?: string;
+  intervenedBy?: string;
+  updatedAt?: string;
+}

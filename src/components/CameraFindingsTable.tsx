@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { CameraFindingRecord } from '../types';
-import { Plus, Trash2, Edit2, AlertOctagon } from 'lucide-react';
+import { Plus, Trash2, Edit2, AlertOctagon, ShieldAlert } from 'lucide-react';
+import { analyzeFindingAlert, highlightKeywordsInText, DEFAULT_CRITICAL_KEYWORDS, DEFAULT_WARNING_KEYWORDS } from '../utils/alertDetector';
 
 interface CameraFindingsTableProps {
   records: CameraFindingRecord[];
@@ -8,6 +9,7 @@ interface CameraFindingsTableProps {
   onEditRecord: (record: CameraFindingRecord) => void;
   onDeleteRecord: (id: string) => void;
   onClearTable?: () => void;
+  onNavigateToAlerts?: () => void;
 }
 
 export const CameraFindingsTable: React.FC<CameraFindingsTableProps> = ({
@@ -15,7 +17,8 @@ export const CameraFindingsTable: React.FC<CameraFindingsTableProps> = ({
   onAddRecord,
   onEditRecord,
   onDeleteRecord,
-  onClearTable
+  onClearTable,
+  onNavigateToAlerts
 }) => {
   // Totals calculation
   const totals = useMemo(() => {
@@ -164,13 +167,36 @@ export const CameraFindingsTable: React.FC<CameraFindingsTableProps> = ({
                 </td>
               </tr>
             ) : (
-              records.map((r, index) => (
-                <tr key={r.id} className="hover:bg-amber-50/30 transition-colors">
+              records.map((r, index) => {
+                const alertMatch = analyzeFindingAlert(r);
+                const isCritical = alertMatch?.severity === 'critical';
+                const isWarning = alertMatch?.severity === 'warning';
+                const { segments } = highlightKeywordsInText(
+                  r.description || '',
+                  [...DEFAULT_CRITICAL_KEYWORDS, ...DEFAULT_WARNING_KEYWORDS]
+                );
+
+                return (
+                <tr
+                  key={r.id}
+                  className={`transition-colors ${
+                    isCritical
+                      ? 'bg-rose-50/40 hover:bg-rose-50/70'
+                      : isWarning
+                      ? 'bg-amber-50/30 hover:bg-amber-50/60'
+                      : 'hover:bg-slate-50/80'
+                  }`}
+                >
                   <td className="py-2.5 px-2 text-center font-medium text-slate-500 border-r border-slate-100">
                     {index + 1}
                   </td>
                   <td className="py-2.5 px-2.5 font-semibold text-slate-800 border-r border-slate-100">
-                    {r.subCity || '—'}
+                    <div className="flex items-center gap-1">
+                      <span>{r.subCity || '—'}</span>
+                      {isCritical && (
+                        <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" title="ከፍተኛ ቅድሚያ ማስጠንቀቂያ" />
+                      )}
+                    </div>
                   </td>
                   <td className="py-2.5 px-2 text-center font-bold text-amber-700 bg-amber-50/30 border-r border-slate-100">
                     {r.totalFindingsCount}
@@ -196,9 +222,55 @@ export const CameraFindingsTable: React.FC<CameraFindingsTableProps> = ({
                     {r.skippedShopInspection}
                   </td>
 
-                  {/* Description */}
+                  {/* Description with automatic keyword highlighting */}
                   <td className="py-2.5 px-3 text-slate-700 border-r border-slate-100 text-xs">
-                    {r.description || '—'}
+                    <div>
+                      {r.description ? (
+                        <p className="leading-relaxed">
+                          {segments.map((seg, idx) =>
+                            seg.isMatch ? (
+                              <mark
+                                key={idx}
+                                className={`px-1 py-0.5 rounded font-bold mx-0.5 ${
+                                  isCritical
+                                    ? 'bg-rose-200 text-rose-950 border border-rose-300'
+                                    : 'bg-amber-200 text-amber-950 border border-amber-300'
+                                }`}
+                              >
+                                {seg.text}
+                              </mark>
+                            ) : (
+                              <span key={idx}>{seg.text}</span>
+                            )
+                          )}
+                        </p>
+                      ) : (
+                        '—'
+                      )}
+                      {alertMatch && (
+                        <div className="mt-1 flex items-center gap-1.5">
+                          <span
+                            className={`text-[10px] font-bold px-1.5 py-0.2 rounded flex items-center gap-1 ${
+                              isCritical
+                                ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                                : 'bg-amber-100 text-amber-800 border border-amber-200'
+                            }`}
+                          >
+                            <ShieldAlert className="w-2.5 h-2.5" />
+                            <span>{isCritical ? 'ከፍተኛ ማስጠንቀቂያ' : 'ማስጠንቀቂያ'}</span>
+                          </span>
+                          {onNavigateToAlerts && (
+                            <button
+                              type="button"
+                              onClick={onNavigateToAlerts}
+                              className="text-[10px] text-rose-600 hover:underline font-semibold"
+                            >
+                              በAlerts እይ →
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </td>
 
                   {/* Action Taken */}
@@ -237,8 +309,9 @@ export const CameraFindingsTable: React.FC<CameraFindingsTableProps> = ({
                     </div>
                   </td>
                 </tr>
-              ))
-            )}
+              );
+            })
+          )}
           </tbody>
 
           {/* Table Footer: Totals Row (ድምር) */}
